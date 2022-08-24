@@ -1,0 +1,3 @@
+pokeapi:
+  base-uri: https://pokeapi.co/api/v2/
+  pokemons-uri: /pokemon
