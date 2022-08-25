@@ -44,6 +44,26 @@ class PokemonRepositoryImplTest {
     }
 
     @Test
+    void getFilteredPokemons_should_return_all_pokemons_if_empty_filters() {
+        // Given
+        var filterChain = filterBuilder.apply(List.of());
+
+        // When
+        var result = repository.getFilteredPokemons(filterChain, 3, 0);
+
+        // Then
+        StepVerifier.create(result)
+                .assertNext(pokemons -> assertThat(pokemons)
+                        .satisfies(p -> assertThat(p.filteredCount()).isEqualTo(3))
+                        .satisfies(p -> assertThat(p.totalCount()).isEqualTo(3))
+                        .satisfies(p -> assertThat(p.results()).extracting(PokemonDto::getName, PokemonDto::getSize, PokemonDto::getWeight)
+                                .contains(Tuple.tuple("ivysaur", 5, 100),
+                                        Tuple.tuple("venusaur", 7, 50),
+                                        Tuple.tuple("bulbasaur", 10, 150))))
+                .verifyComplete();
+    }
+
+    @Test
     void getFilteredPokemons_should_return_filtered_pokemons_with_lower_than() {
         // Given
         var filterDescs = List.of(
